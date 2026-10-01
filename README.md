@@ -29,7 +29,7 @@ Todo shape: `{ id, title, done (0/1), createdAt }`
 - `settings.json` holds the model choice and deny rules that stop Claude reading `node_modules` and lockfiles.
 - Work was done in 3 prompts (backend, frontend, extras), with `/clear` and a git commit between each to keep context small.
 - One custom subagent (`reviewer`, runs on Haiku, read-only tools) reviewed the code; the main session fixed its HIGH issues.
-- I ran the servers and tested in the browser myself.
+
 
 ### Loop / Harness / Orchestrator
 
