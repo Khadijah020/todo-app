@@ -64,6 +64,22 @@ test('PATCH missing id gives 404', async () => {
   assert.equal(res.status, 404);
 });
 
+test('DELETE ?done=1 clears only done todos', async () => {
+  const done = await request(app).post('/api/todos').send({ title: 'finished' });
+  const open = await request(app).post('/api/todos').send({ title: 'open' });
+  await request(app).patch(`/api/todos/${done.body.id}`).send({ done: 1 });
+  const res = await request(app).delete('/api/todos?done=1');
+  assert.equal(res.status, 204);
+  const ids = (await request(app).get('/api/todos')).body.map((t) => t.id);
+  assert.ok(!ids.includes(done.body.id));
+  assert.ok(ids.includes(open.body.id));
+});
+
+test('DELETE /api/todos without done=1 gives 400', async () => {
+  const res = await request(app).delete('/api/todos');
+  assert.equal(res.status, 400);
+});
+
 test('DELETE removes a todo', async () => {
   const { body } = await request(app).post('/api/todos').send({ title: 'gone' });
   const res = await request(app).delete(`/api/todos/${body.id}`);

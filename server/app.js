@@ -47,6 +47,13 @@ app.patch('/api/todos/:id', (req, res) => {
   res.json(getTodo(todo.id));
 });
 
+// Deletes every done todo; only ?done=1 is accepted.
+app.delete('/api/todos', (req, res) => {
+  if (req.query.done !== '1') return res.status(400).json({ error: 'done=1 required' });
+  db.prepare('delete from todos where done = 1').run();
+  res.status(204).end();
+});
+
 app.delete('/api/todos/:id', (req, res) => {
   const { changes } = db.prepare('delete from todos where id = ?').run(req.params.id);
   if (!changes) return res.status(404).json({ error: 'not found' });
