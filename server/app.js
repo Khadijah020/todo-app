@@ -60,4 +60,9 @@ app.delete('/api/todos/:id', (req, res) => {
   res.status(204).end();
 });
 
+// Catches errors thrown by route handlers (e.g. DB failures) and returns a JSON 500.
+app.use((err, req, res, next) => {
+  res.status(500).json({ error: 'internal error' });
+});
+
 export default app;
